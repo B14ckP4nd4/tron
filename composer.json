@@ -17,6 +17,7 @@
     "require": {
         "php": "^7.2",
         "illuminate/support": "^6.0",
+        "ionux/phactor": "^1.0",
         "ext-curl": "*"
     },
     "minimum-stability": "dev"
