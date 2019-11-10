@@ -1,0 +1,23 @@
+{
+    "name": "blackpanda/tron",
+    "version": "1.0.0",
+    "description": "TRON",
+    "license" : "MIT",
+    "autoload": {
+        "psr-4": {
+            "blackpanda\\tron\\" : "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "B14ckP4nd4",
+            "email": "B14ckP4nd4@protonmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "illuminate/support": "^6.0",
+        "ext-curl": "*"
+    },
+    "minimum-stability": "dev"
+}
