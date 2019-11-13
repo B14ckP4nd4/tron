@@ -77,6 +77,11 @@
             return $transactionsData->toArray();
         }
 
+        /**
+         * get a Transaction Info
+         * @param string $hash
+         * @return bool|mixed|string
+         */
         public function transactionInfo(string $hash)
         {
             $transaction = $this->request('transaction-info',[
@@ -86,11 +91,20 @@
             return $transaction;
         }
 
+        /**
+         * get All Transfers
+         * @param bool $onlyConfirmed
+         * @return array|bool
+         */
         public function transfers(bool $onlyConfirmed = true)
         {
             return $this->transactions($onlyConfirmed , 'transfers');
         }
 
+        /**
+         * get All Transactions
+         * @return int
+         */
         public function totalTransactions() : int
         {
             $transactions = $this->request('transfer', [
@@ -112,11 +126,14 @@
             return $contracts['total'] + $transactions['total'];
         }
 
+        /**
+         * return Total of Transfers
+         * @return int
+         */
         public function totalTransfers() : int
         {
             return $this->totalTransactions();
         }
-
 
         private function request(string $endpoint = null, array $GET = [], array $params = [])
         {

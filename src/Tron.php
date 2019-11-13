@@ -97,6 +97,21 @@
         }
 
 
+        /**
+         * Single Transaction Info
+         * @param string $hash
+         * @return bool|mixed|string
+         */
+        public function transactionInfo(string $hash)
+        {
+            return $this->tronScan->transactionInfo($hash);
+        }
+
+
+        /**
+         * return total Transactions
+         * @return int
+         */
         public function totalTransactions()
         {
             return $this->tronScan->totalTransactions();
