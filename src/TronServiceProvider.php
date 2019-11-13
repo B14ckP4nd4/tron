@@ -4,6 +4,7 @@
     namespace blackpanda\tron;
 
 
+    use Illuminate\Foundation\AliasLoader;
     use Illuminate\Support\ServiceProvider;
 
     class TronServiceProvider extends ServiceProvider
@@ -16,6 +17,20 @@
             });
 
 
+            // register Facades
+            $loader = AliasLoader::getInstance();
+            $loader->alias('TRON', 'blackpanda\tron\TronFacade');
+
+            // Register
+            $this->app->register(TronEventServiceProvider::class);
+        }
+
+        public function boot()
+        {
+            // Register Publishes
+            $this->publishes([
+                __DIR__ . '/../publishes/configs' => config_path(''),
+            ], 'configs');
         }
 
     }

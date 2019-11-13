@@ -6,8 +6,9 @@
 
     use blackpanda\tron\support\Base58Check;
     use blackpanda\tron\support\Hash;
+    use blackpanda\tron\Tron;
 
-    class Address
+    class Address extends Tron
     {
         protected $address;
         protected $privateKey;
@@ -19,18 +20,25 @@
 
         public function __construct(string $address,string $privateKey = null,string $hexAddress = null)
         {
+            parent::__construct();
             $this->address = $address;
             $this->privateKey = $privateKey;
             $this->hexAddress = $hexAddress;
         }
+
+
 
         public function __get($name)
         {
             return $this->{$name};
         }
 
-        public function validateAddress() : bool
+        public function validateAddress()
         {
+            // Validate In Network
+            $tronValidate = $this->tron->validateAddress($this->address);
+            if(!isset($tronValidate['result']) && $tronValidate['result'] !== true) return false;
+
             // Check Address Size
             if(strlen($this->address) !== self::ADDRESS_SIZE ) return false;
 
@@ -55,7 +63,29 @@
             return true;
         }
 
+        /**
+         * @return string
+         */
+        public function getAddress(): string
+        {
+            return $this->address;
+        }
 
+        /**
+         * @return string
+         */
+        public function getPrivateKey(): string
+        {
+            return $this->privateKey;
+        }
+
+        /**
+         * @return string
+         */
+        public function getHexAddress(): string
+        {
+            return $this->hexAddress;
+        }
 
 
     }

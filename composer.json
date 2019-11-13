@@ -18,7 +18,8 @@
         "php": "^7.2",
         "illuminate/support": "^6.0",
         "ionux/phactor": "^1.0",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "iexbase/tron-api": "dev-master"
     },
     "minimum-stability": "dev"
 }

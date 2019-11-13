@@ -182,4 +182,60 @@ class Utils
         }
         return substr($str, 2);
     }
+
+
+    public static function jsonDecode(string $json , bool $assoc = false)
+    {
+        $json = json_decode($json , $assoc);
+        if(json_last_error() == JSON_ERROR_NONE)
+        {
+            return $json;
+        }
+        return false;
+    }
+
+    /**
+     * Convert float to trx format
+     *
+     * @param $double
+     * @return int
+     */
+    public static function toTron($double): int {
+        return (int) bcmul((string)$double, (string)1e6,0);
+    }
+
+    /**
+     * Convert trx to float
+     *
+     * @param $amount
+     * @return float
+     */
+    public static function fromTron($amount): float {
+        return (float) bcdiv((string)$amount, (string)1e6, 8);
+    }
+
+    public static function isSupportedToken(string $name = null ,int $id = null ,string $contractAddress = null ,string $type = null)
+    {
+        if(is_null($name) && is_null($id) && is_null($contractAddress) && is_null($type)) return false;
+        $valid = true;
+
+        $token = [
+            'name' => $name,
+            'ContractAddress' => $contractAddress,
+            'type' => $type,
+            'id' => $id,
+        ];
+
+        $supportedTokens = config('tron.SupportedTokens');
+
+        if(!isset($supportedTokens[$token['name']])) return false;
+
+        foreach ($supportedTokens[$token['name']] as $key => $val){
+            if(!is_null($token[$key]) && $token[$key] !== $val) $valid = $key;
+        }
+
+        return $valid;
+
+
+    }
 }
