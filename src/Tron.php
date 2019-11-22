@@ -129,6 +129,13 @@
             $this->address = $address;
         }
 
+
+        public function getTokensList(int $start = 0, int $limit = 100, string $order = 'desc', string $filter = 'all', string $sort = 'volume24hInTrx', string $order_current
+        = 'descend')
+        {
+            return $this->tronScan->getTokensList($start,$limit,$order,$filter,$sort,$order_current);
+        }
+
         /**
          * @return mixed
          */

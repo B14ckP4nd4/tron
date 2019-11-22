@@ -4,6 +4,7 @@
     namespace blackpanda\tron;
 
 
+    use blackpanda\tron\commands\updateTokensCommand;
     use Illuminate\Foundation\AliasLoader;
     use Illuminate\Support\ServiceProvider;
 
@@ -30,7 +31,21 @@
             // Register Publishes
             $this->publishes([
                 __DIR__ . '/../publishes/configs' => config_path(''),
-            ], 'configs');
+            ], 'Tron-Configs');
+
+            $this->publishes([
+                __DIR__ . '/../publishes/migrations' => database_path('/migrations'),
+            ], 'Tron-Migrations');
+
+            $this->publishes([
+                __DIR__ . '/../publishes/models' => app_path(),
+            ], 'Tron-Models');
+
+            if($this->app->runningInConsole()){
+                $this->commands([
+                    updateTokensCommand::class,
+                ]);
+            }
         }
 
     }

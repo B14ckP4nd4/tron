@@ -28,12 +28,16 @@
          * TronScan constructor.
          * @param $address
          */
-        public function __construct($address)
+        public function __construct($address = null)
         {
-            $this->address = $address;
+            $this->address = $address ?? null;
         }
 
 
+        /**
+         * get Details of Account
+         * @return bool|mixed|string
+         */
         public function accountDetails()
         {
             $request = $this->request('account', [
@@ -43,7 +47,13 @@
             return $request;
         }
 
-        public function transactions(bool $onlyConfirmed = true , string $endpoint = 'transaction')
+        /**
+         * get Account Transactions
+         * @param bool $onlyConfirmed
+         * @param string $endpoint
+         * @return array|bool
+         */
+        public function transactions(bool $onlyConfirmed = true, string $endpoint = 'transaction')
         {
             $transactions = $this->request($endpoint, [
                 'address' => $this->address,
@@ -61,9 +71,9 @@
                 'limit' => self::TransactionsLimit,
             ]);
 
-            $contracts = $this->arrangeContracts($contracts ,$endpoint);
+            $contracts = $this->arrangeContracts($contracts, $endpoint);
 
-            $mergeTransfers = $this->mergeTransfers($transactions , $contracts);
+            $mergeTransfers = $this->mergeTransfers($transactions, $contracts);
 
             if (!$transactions && !$contracts) return false;
 
@@ -84,7 +94,7 @@
          */
         public function transactionInfo(string $hash)
         {
-            $transaction = $this->request('transaction-info',[
+            $transaction = $this->request('transaction-info', [
                 'hash' => $hash,
             ]);
 
@@ -98,14 +108,14 @@
          */
         public function transfers(bool $onlyConfirmed = true)
         {
-            return $this->transactions($onlyConfirmed , 'transfers');
+            return $this->transactions($onlyConfirmed, 'transfers');
         }
 
         /**
          * get All Transactions
          * @return int
          */
-        public function totalTransactions() : int
+        public function totalTransactions(): int
         {
             $transactions = $this->request('transfer', [
                 'address' => $this->address,
@@ -130,11 +140,35 @@
          * return Total of Transfers
          * @return int
          */
-        public function totalTransfers() : int
+        public function totalTransfers(): int
         {
             return $this->totalTransactions();
         }
 
+
+        public function getTokensList(int $start = 0, int $limit = 100, string $order = 'desc', string $filter = 'all', string $sort = 'volume24hInTrx', string $order_current
+        = 'descend')
+        {
+            $tokensList = $this->request('tokens/overview', [
+                'start' => $start,
+                'limit' => $limit,
+                'order' => $order,
+                'filter' => $filter,
+                'sort' => $sort,
+                'order_current' => $order_current,
+            ]);
+
+            return $tokensList;
+        }
+
+
+        /**
+         * Handle Request To API
+         * @param string|null $endpoint
+         * @param array $GET
+         * @param array $params
+         * @return bool|mixed|string
+         */
         private function request(string $endpoint = null, array $GET = [], array $params = [])
         {
             $ch = curl_init();
@@ -186,28 +220,40 @@
             $this->address = $address;
         }
 
-        private function mergeTransfers(array $transfer1 ,array $transfer2){
-            if(!isset($transfer1['data']) || !isset($transfer2)) return false;
+        /**
+         * Merge two Part of Transfer ( for tokens and main Tron Transfers )
+         * @param array $transfer1
+         * @param array $transfer2
+         * @return array|bool
+         */
+        private function mergeTransfers(array $transfer1, array $transfer2)
+        {
+            if (!isset($transfer1['data']) || !isset($transfer2)) return false;
 
             $merged = [
                 'total' => 0,
                 'data' => [],
                 'rangeTotal' => 0,
             ];
-            $merged['data'] = array_merge($transfer1['data'],$transfer2['data']);
+            $merged['data'] = array_merge($transfer1['data'], $transfer2['data']);
             $merged['total'] = count($merged['data']);
             $merged['rangeTotal'] = $merged['total'];
 
             return $merged;
         }
 
-        private function arrangeContracts(array $contracts , $format = 'transfer'){
+        /**
+         * Arrange Contracts Transaction and Transfers Info for Merging
+         * @param array $contracts
+         * @param string $format
+         * @return array
+         */
+        private function arrangeContracts(array $contracts, $format = 'transfer')
+        {
             $data = [];
 
-            foreach ($contracts['data'] as $items)
-            {
-                if($format == 'transaction')
-                {
+            foreach ($contracts['data'] as $items) {
+                if ($format == 'transaction') {
                     $data[] = $this->transactionInfo($items['transactionHash']);
                     continue;
                 }
