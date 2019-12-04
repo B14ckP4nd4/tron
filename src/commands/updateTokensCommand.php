@@ -39,21 +39,33 @@ class updateTokensCommand extends Command
     public function handle()
     {
         $limit = $this->argument('limit') ?? 100 ;
-        $TokensList = new TronScan();
-        $TokensList = $TokensList->getTokensList(0,$limit);
+        $tokensList = new tronScan();
+        $trc10 = $tokensList->tokensList($limit,'trc10');
+        $trc20 = $tokensList->tokensList($limit,'trc20');
 
-        foreach ($TokensList['tokens'] as $token){
-            \App\tron\TrxToken::firstOrCreate([
-                'abbr' => $token['abbr'],
+        foreach ($trc10 as $token){
+            \App\tron\TrxToken::updateOrCreate([
                 'name' => $token['name'],
-                'pairId' => $token['pairId'] ?? null,
-                'contractAddress' => $token['contractAddress'] ?? null,
-                'decimal' => $token['decimal'],
+                'symbol' => $token['abbr'],
+                'tokenID' => $token['tokenId'],
+                'type' => $token['tokenType'],
+                'url' => $token['projectSite'],
+                'logo' => $token['imgUrl'] ?? null,
                 'description' => $token['description'],
-                'isTop' => $token['isTop'],
-                'projectSite' => $token['projectSite'],
-                'supply' => $token['supply'],
-                'tokenType' => $token['tokenType'],
+                'contractAddress' => $token['contractAddress'] ?? null,
+            ]);
+        }
+
+        foreach ($trc20 as $trc20token){
+            \App\tron\TrxToken::updateOrCreate([
+                'name' => $trc20token['name'],
+                'symbol' => $trc20token['abbr'],
+                'tokenID' => $trc20token['tokenId'] ?? 0,
+                'type' => $trc20token['tokenType'],
+                'url' => $trc20token['projectSite'],
+                'logo' => $trc20token['imgUrl'] ?? null,
+                'description' => $trc20token['description'],
+                'contractAddress' => $trc20token['contractAddress'] ?? null,
             ]);
         }
 

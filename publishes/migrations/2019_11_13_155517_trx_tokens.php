@@ -15,18 +15,17 @@ class TrxTokens extends Migration
     {
         Schema::create('trx_tokens', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('abbr');
             $table->string('name');
-            $table->unsignedBigInteger('pairId')->nullable();
-            $table->string('contractAddress')->nullable();
-            $table->integer('decimal');
+            $table->string('symbol');
+            $table->unsignedBigInteger('tokenID')->default(0);
+            $table->string('type');
+            $table->text('url')->nullable();
+            $table->text('logo')->nullable();
             $table->text('description')->nullable();
-            $table->boolean('isTop')->default(false);
-            $table->string('projectSite')->nullable();
-            $table->unsignedBigInteger('supply')->nullable();
-            $table->string('tokenType');
+            $table->string('contractAddress')->nullable();
             $table->boolean('supported')->default(false);
             $table->timestamps();
+
         });
     }
 
