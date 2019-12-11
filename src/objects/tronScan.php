@@ -30,6 +30,24 @@
             return $request;
         }
 
+        // Tokens and Balances
+
+        public function balance(bool $fromTron = true)
+        {
+            $account = $this->account();
+            if ($account && isset($account['balances'])) {
+                foreach ($account['balances'] as $balance) {
+                    if ($balance['name'] == '_') {
+
+                        if ($fromTron) return Utils::fromTron($balance['balance']);
+
+                        return $balance['balance'];
+                    }
+                }
+            }
+            return false;
+        }
+
         public function TRC10Balance(bool $fromTron = true)
         {
             $tokens = [];
@@ -40,18 +58,16 @@
 
                     $findToken = new token();
                     $find = $findToken->getTokenByTokenId($token['name']);
-                    if(!$find)
-                    {
+                    if (!$find) {
                         $findToken->dispatchTRC10Token($token['name'])->store();
                         $find = $findToken->getTokenByTokenId($token['name']);
                     }
-                    if(isset($find->id) && $find->id != 0)
-                    {
+                    if (isset($find->id) && $find->id != 0) {
                         $token['name'] = $find->name;
                         $token['tokenID'] = $find->tokenID;
                         $token['type'] = $find->type;
                         $token['symbol'] = $find->symbol;
-                        if($fromTron)
+                        if ($fromTron)
                             $token['balance'] = Utils::fromTron($token['balance']);
                     }
                     $tokens[] = $token;
@@ -75,8 +91,7 @@
                         'type' => 'trc20',
                         'contractAddress' => $token['contract_address'],
                     ]);
-                    if(!$find)
-                    {
+                    if (!$find) {
                         $findToken->dispatchTRC20Token($token['contract_address'])->store();
                         $find = $findToken->findToken([
                             'name' => $token['name'],
@@ -85,13 +100,12 @@
                             'contractAddress' => $token['contract_address'],
                         ]);
                     }
-                    if(isset($find->id) && $find->id != 0)
-                    {
+                    if (isset($find->id) && $find->id != 0) {
                         $token['name'] = $find->name;
                         $token['tokenID'] = $find->tokenID;
                         $token['type'] = $find->type;
                         $token['symbol'] = $find->symbol;
-                        if($fromTron)
+                        if ($fromTron)
                             $token['balance'] = Utils::fromTron($token['balance']);
                     }
                     $tokens[] = $token;
@@ -105,13 +119,12 @@
         {
             $trc10 = $this->TRC10Balance();
             $trc20 = $this->TRC20Balance();
-            return array_merge($trc10,$trc20);
+            return array_merge($trc10, $trc20);
         }
 
-
-        public function getTRC10tokenByID(int $tokenID )
+        public function getTRC10tokenByID(int $tokenID)
         {
-            $token = $this->request("token",[
+            $token = $this->request("token", [
                 'id' => $tokenID,
                 'all' => 1,
             ]);
@@ -121,7 +134,7 @@
 
         public function getTRC20TokenByContractAddress(string $contractAddress)
         {
-            $token = $this->request('token_trc20',[
+            $token = $this->request('token_trc20', [
                 'contract' => $contractAddress,
             ]);
 
@@ -130,7 +143,7 @@
 
 
         public function tokensList(int $limit = 100, string $filter = 'all', int $start = 0, string $order = 'desc', string $sort = 'volume24hInTrx', string $order_current =
-    'descend')
+        'descend')
         {
             $tokens = [];
             $request = $this->request('tokens/overview', [
@@ -142,12 +155,33 @@
                 'order_current' => $order_current
             ]);
 
-            if($request && isset($request['tokens']))
-            {
+            if ($request && isset($request['tokens'])) {
                 $tokens = $request['tokens'];
             }
 
             return $tokens;
+        }
+
+        // Transactions
+
+        public function transactions(bool $onlyConfirmed = true, string $sort = '-timestamp', int $limit = 999999999, int $start = 0, string $start_timestamp = null, string
+        $end_timestamp = null, bool $count = true)
+        {
+            $transactions = $this->request('transaction', [
+                'address' => $this->address,
+                'limit' => $limit,
+                'sort' => $sort,
+                'count' => $count,
+                'start' => $start,
+                'start_timestamp' => $start_timestamp,
+                'end_timestamp' => '1575229522000',
+            ]);
+
+            if (!is_array($transactions) || !isset($transactions['data'])) return false;
+
+            return $transactions;
+
+
         }
 
 
