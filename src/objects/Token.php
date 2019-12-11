@@ -6,7 +6,7 @@
 
     use App\tron\TrxToken;
 
-    class token
+    class Token
     {
         public $id;
         public $name;

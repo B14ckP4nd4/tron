@@ -56,7 +56,7 @@
                 foreach ($balance['balances'] as $token) {
                     if ($token['name'] == '_') continue;
 
-                    $findToken = new token();
+                    $findToken = new Token();
                     $find = $findToken->getTokenByTokenId($token['name']);
                     if (!$find) {
                         $findToken->dispatchTRC10Token($token['name'])->store();
@@ -84,7 +84,7 @@
             $balance = $this->account();
             if ($balance && isset($balance['trc20token_balances'])) {
                 foreach ($balance['trc20token_balances'] as $token) {
-                    $findToken = new token();
+                    $findToken = new Token();
                     $find = $findToken->findToken([
                         'name' => $token['name'],
                         'symbol' => $token['symbol'],

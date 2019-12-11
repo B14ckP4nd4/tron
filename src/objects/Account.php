@@ -8,7 +8,7 @@
     use blackpanda\tron\Tron;
     use function GuzzleHttp\Promise\promise_for;
 
-    class accounts
+    class Account
     {
         public $id;
         public $address;

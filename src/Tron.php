@@ -70,6 +70,8 @@
         }
 
 
+
+
         private function setApi(){
             $fullNode = new HttpProvider($this->apiProvider);
             $solidityNode = new HttpProvider($this->apiProvider);
