@@ -41,11 +41,22 @@
             }
         }
 
+        /**
+         * find Tokens with Arguments
+         * @param array $arg
+         * @return mixed
+         */
         public function findToken(array $arg)
         {
             return TrxToken::where($arg[0],$arg[1])->first();
         }
 
+
+        /**
+         * find Token with Token ID ( only TRC10 )
+         * @param int $tokenId
+         * @return bool|mixed
+         */
         public function getTokenByTokenId(int $tokenId)
         {
             $token = $this->findToken(['tokenID',$tokenId]);
@@ -57,6 +68,11 @@
             return $this->token;
         }
 
+        /**
+         * Find Tokens With Contract Address ( Only TRC20 )
+         * @param string $contactAddress
+         * @return bool|mixed
+         */
         public function getTokenByContactAddress(string $contactAddress){
             $token = $this->findToken(['contactAddress',$contactAddress]);
 
@@ -67,6 +83,11 @@
             return $this->token;
         }
 
+
+        /**
+         * Save Token
+         * @return mixed
+         */
         public function store()
         {
             return TrxToken::updateOrCreate([
@@ -81,6 +102,12 @@
             ]);
         }
 
+
+        /**
+         * Find TRC10 Token With Token ID in Database OR get from API
+         * @param int $tokenID
+         * @return $this|bool|mixed
+         */
         public function dispatchTRC10Token(int $tokenID)
         {
             if($this->getTokenByTokenId($tokenID)) return $this->getTokenByTokenId($tokenID);
@@ -102,6 +129,12 @@
             return false;
         }
 
+
+        /**
+         * Find TRC20 Token With Contract Address in Database OR get from API
+         * @param string $contractAddress
+         * @return $this|bool|mixed
+         */
         public function dispatchTRC20Token(string $contractAddress)
         {
             if($this->getTokenByContactAddress($contractAddress)) return $this->getTokenByContactAddress($tokenID);
@@ -124,6 +157,10 @@
         }
 
 
+        /**
+         * Set Object Properties
+         * @param TrxToken $token
+         */
         private function setProperties(TrxToken $token)
         {
             foreach ($token as $key => $val)

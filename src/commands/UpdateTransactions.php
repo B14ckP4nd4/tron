@@ -95,6 +95,11 @@
 
         }
 
+
+        /**
+         * Update All TRX Transfer
+         * @param TrxAccounts $account
+         */
         private function updateTronTransactions(TrxAccounts $account)
         {
 
@@ -153,6 +158,10 @@
 
         }
 
+        /**
+         * Update All TRC10 Tokens Transfers
+         * @param TrxAccounts $account
+         */
         private function updateTokensTransactions(TrxAccounts $account){
             $transactions = TrxTransaction::where([
                 ['account' , '=', $account->id],
@@ -211,7 +220,13 @@
 
         }
 
-        private function updateContractsEvents(TrxAccounts $account,TrxToken $token){
+
+        /**
+         * Update All TRC20 Tokens Transfers
+         * @param TrxAccounts $account
+         * @param TrxToken $token
+         */
+        private function updateContractsEvents(TrxAccounts $account, TrxToken $token){
             $this->info("{$this->commandLogPrefix} Start checking '{$token}' Transfers...");
 
             $transactions = TrxTransaction::where([
