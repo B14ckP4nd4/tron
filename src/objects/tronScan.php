@@ -21,6 +21,10 @@
             $this->address = $address;
         }
 
+        /**
+         * return Account Details
+         * @return bool|mixed|string
+         */
         public function account()
         {
             $request = $this->request('account', [
@@ -32,6 +36,11 @@
 
         // Tokens and Balances
 
+        /**
+         * return Tron Balance
+         * @param bool $fromTron
+         * @return bool|float|mixed
+         */
         public function balance(bool $fromTron = true)
         {
             $account = $this->account();
@@ -48,6 +57,12 @@
             return false;
         }
 
+
+        /**
+         * get TRC10 Tokens Balance
+         * @param bool $fromTron
+         * @return array
+         */
         public function TRC10Balance(bool $fromTron = true)
         {
             $tokens = [];
@@ -78,6 +93,12 @@
             return $tokens;
         }
 
+
+        /**
+         * get TRC20 Tokens Balance
+         * @param bool $fromTron
+         * @return array
+         */
         public function TRC20Balance(bool $fromTron = true)
         {
             $tokens = [];
@@ -115,6 +136,11 @@
             return $tokens;
         }
 
+
+        /**
+         * get All Tokens Balances
+         * @return array
+         */
         public function tokensBalance()
         {
             $trc10 = $this->TRC10Balance();
@@ -122,6 +148,12 @@
             return array_merge($trc10, $trc20);
         }
 
+
+        /**
+         * get TRC10 Token Details Based on Token ID
+         * @param int $tokenID
+         * @return bool|mixed|string
+         */
         public function getTRC10tokenByID(int $tokenID)
         {
             $token = $this->request("token", [
@@ -132,6 +164,11 @@
             return $token;
         }
 
+        /**
+         * get TRC20 Token Details based on Contract Address
+         * @param string $contractAddress
+         * @return bool|mixed|string
+         */
         public function getTRC20TokenByContractAddress(string $contractAddress)
         {
             $token = $this->request('token_trc20', [
@@ -142,6 +179,16 @@
         }
 
 
+        /**
+         * return List of Tokens
+         * @param int $limit
+         * @param string $filter
+         * @param int $start
+         * @param string $order
+         * @param string $sort
+         * @param string $order_current
+         * @return array|mixed
+         */
         public function tokensList(int $limit = 100, string $filter = 'all', int $start = 0, string $order = 'desc', string $sort = 'volume24hInTrx', string $order_current =
         'descend')
         {
@@ -164,6 +211,17 @@
 
         // Transactions and Transfers
 
+        /**
+         * Return all Account Transactions
+         * @param bool $onlyConfirmed
+         * @param string $sort
+         * @param int $limit
+         * @param int $start
+         * @param int|null $start_timestamp
+         * @param int|null $end_timestamp
+         * @param bool $count
+         * @return bool|mixed|string
+         */
         public function transactions(bool $onlyConfirmed = true, string $sort = '-timestamp', int $limit = 999999999, int $start = 0, int $start_timestamp = null, int
         $end_timestamp = null, bool $count = true)
         {
@@ -183,7 +241,18 @@
         }
 
 
-        public function transfers(string $token = '_' , string $sort = '-timestamp' , int $start = 0, int $limit = 50 ,  string $start_timestamp = null, string
+        /**
+         * Return Tron Transfers
+         * @param string $token
+         * @param string $sort
+         * @param int $start
+         * @param int $limit
+         * @param string|null $start_timestamp
+         * @param string|null $end_timestamp
+         * @param bool $count
+         * @return bool|mixed|string
+         */
+        public function transfers(string $token = '_' , string $sort = '-timestamp' , int $start = 0, int $limit = 50 , string $start_timestamp = null, string
         $end_timestamp = null, bool $count = true)
         {
             $transfers = $this->request('transfer',[
@@ -202,6 +271,15 @@
         }
 
 
+        /**
+         * return TRC20 Transfers with Specific Contract Address
+         * @param string $contract
+         * @param int $limit
+         * @param int $start
+         * @param int|null $start_timestamp
+         * @param int|null $end_timestamp
+         * @return bool|mixed|string
+         */
         public function contractEvents(string $contract , int $limit = 50 , int $start = 0 , int $start_timestamp = null , int $end_timestamp = null )
         {
             $events = $this->request('contract/events',[
