@@ -202,6 +202,23 @@
         }
 
 
+        public function contractEvents(string $contract , int $limit = 50 , int $start = 0 , int $start_timestamp = null , int $end_timestamp = null )
+        {
+            $events = $this->request('contract/events',[
+                'address' => $this->address,
+                'contract' => $contract,
+                'limit' => $limit,
+                'start' => $start,
+                'start_timestamp' => (strlen($start_timestamp) == 10)? $start_timestamp * 1000 : $start_timestamp,
+                'end_timestamp' => (strlen($end_timestamp) == 10)? $end_timestamp * 1000 : $end_timestamp,
+            ]);
+
+            if (!is_array($events) || !isset($events['data'])) return false;
+
+            return $events;
+        }
+
+
         /**
          * Handle Request To API
          * @param string|null $endpoint
