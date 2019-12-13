@@ -162,9 +162,9 @@
             return $tokens;
         }
 
-        // Transactions
+        // Transactions and Transfers
 
-        public function transactions(bool $onlyConfirmed = true, string $sort = '-timestamp', int $limit = 999999999, int $start = 0, string $start_timestamp = null, string
+        public function transactions(bool $onlyConfirmed = true, string $sort = '-timestamp', int $limit = 999999999, int $start = 0, int $start_timestamp = null, int
         $end_timestamp = null, bool $count = true)
         {
             $transactions = $this->request('transaction', [
@@ -173,15 +173,32 @@
                 'sort' => $sort,
                 'count' => $count,
                 'start' => $start,
-                'start_timestamp' => $start_timestamp,
-                'end_timestamp' => '1575229522000',
+                'start_timestamp' => (strlen($start_timestamp) == 10)? $start_timestamp * 1000 : $start_timestamp,
+                'end_timestamp' => (strlen($end_timestamp) == 10)? $end_timestamp * 1000 : $end_timestamp,
             ]);
 
             if (!is_array($transactions) || !isset($transactions['data'])) return false;
 
             return $transactions;
+        }
 
 
+        public function transfers(string $token = '_' , string $sort = '-timestamp' , int $start = 0, int $limit = 50 ,  string $start_timestamp = null, string
+        $end_timestamp = null, bool $count = true)
+        {
+            $transfers = $this->request('transfer',[
+                'address' => $this->address,
+                'sort' => $sort,
+                'start' => $start,
+                'limit' => $limit,
+                'start_timestamp' => (strlen($start_timestamp) == 10)? $start_timestamp * 1000 : $start_timestamp,
+                'end_timestamp' => (strlen($end_timestamp) == 10)? $end_timestamp * 1000 : $end_timestamp,
+                'count' => $count,
+            ]);
+
+            if (!is_array($transfers) || !isset($transfers['data'])) return false;
+
+            return $transfers;
         }
 
 
@@ -208,11 +225,12 @@
             }
 
             // Time OUT
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+
             // Turn off the server and peer verification (TrustManager Concept).
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-            curl_setopt($ch, CURLOPT_TIMEOUT_MS, 2000);
+            curl_setopt($ch, CURLOPT_TIMEOUT_MS, 8000);
 
             // Params
             if (!empty($params)) {
@@ -231,6 +249,7 @@
             curl_close($ch);
 
             if ($http_code !== 200) return false;
+
 
             return Utils::jsonDecode($response, true);
         }

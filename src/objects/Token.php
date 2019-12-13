@@ -43,12 +43,22 @@
 
         public function findToken(array $arg)
         {
-            return TrxToken::where($arg)->first();
+            return TrxToken::where($arg[0],$arg[1])->first();
         }
 
         public function getTokenByTokenId(int $tokenId)
         {
-            $token = TrxToken::where('tokenID',$tokenId)->first();
+            $token = $this->findToken(['tokenID',$tokenId]);
+
+            if(!$token) return false;
+
+            $this->token = $token;
+
+            return $this->token;
+        }
+
+        public function getTokenByContactAddress(string $contactAddress){
+            $token = $this->findToken(['contactAddress',$contactAddress]);
 
             if(!$token) return false;
 
@@ -73,6 +83,7 @@
 
         public function dispatchTRC10Token(int $tokenID)
         {
+            if($this->getTokenByTokenId($tokenID)) return $this->getTokenByTokenId($tokenID);
             $token = $this->tronScan->getTRC10tokenByID($tokenID);
             if(isset($token['data'])){
                 $theToken = $token['data'][0];
@@ -93,6 +104,7 @@
 
         public function dispatchTRC20Token(string $contractAddress)
         {
+            if($this->getTokenByContactAddress($contractAddress)) return $this->getTokenByContactAddress($tokenID);
             $token = $this->tronScan->getTRC20TokenByContractAddress($contractAddress);
             if(isset($token['trc20_tokens'])){
                 $theToken = $token['trc20_tokens'][0];

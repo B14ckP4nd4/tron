@@ -18,7 +18,7 @@ class TrxTransactions extends Migration
             $table->unsignedBigInteger('account')->nullable();
             $table->unsignedBigInteger('block');
             $table->longText('hash');
-            $table->timestamp('timestamp');
+            $table->string('timestamp');
             $table->longText('ownerAddress');
             $table->longText('toAddress');
             $table->unsignedInteger('contractType');

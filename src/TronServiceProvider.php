@@ -5,6 +5,7 @@
 
 
     use blackpanda\tron\commands\updateTokensCommand;
+    use blackpanda\tron\commands\UpdateTransactions;
     use Illuminate\Foundation\AliasLoader;
     use Illuminate\Support\ServiceProvider;
 
@@ -44,6 +45,7 @@
             if($this->app->runningInConsole()){
                 $this->commands([
                     updateTokensCommand::class,
+                    UpdateTransactions::class,
                 ]);
             }
         }
