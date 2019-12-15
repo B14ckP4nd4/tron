@@ -30,6 +30,8 @@
             $this->address = $address;
             $this->hexAddress = $hexAddress;
             $this->privateKey = $privateKey;
+
+            return $this;
         }
 
         public function isValid()

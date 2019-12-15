@@ -17,7 +17,7 @@ class TrxAccounts extends Migration
             $table->bigIncrements('id');
             $table->text('address')->unique();
             $table->text('hexAddress')->unique();
-            $table->longText('privateKey');
+            $table->binary('privateKey');
             $table->boolean('active')->default(0);
             $table->timestamp('last_use')->nullable();
             $table->timestamps();
