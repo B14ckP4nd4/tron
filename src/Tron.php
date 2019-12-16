@@ -69,6 +69,21 @@
             return true;
         }
 
+        public function generateEncryptedWallet()
+        {
+            $wallet = $this->walletGenerator->generateWallet();
+
+            if($wallet)
+            {
+                $encrypt = SSLEncryption::publicEncrypt($wallet->privateKey);
+                $wallet->privateKey = $encrypt;
+
+                return $wallet;
+            }
+
+            return false;
+        }
+
 
 
 

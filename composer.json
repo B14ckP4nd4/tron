@@ -19,7 +19,8 @@
         "illuminate/support": "^6.0",
         "ionux/phactor": "^1.0",
         "ext-curl": "*",
-        "iexbase/tron-api": "dev-master"
+        "iexbase/tron-api": "dev-master",
+        "blackpanda/encryptor": "~1"
     },
     "minimum-stability": "dev"
 }
