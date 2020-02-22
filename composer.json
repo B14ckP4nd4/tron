@@ -1,7 +1,6 @@
 {
     "name": "blackpanda/tron",
-    "version": "1.0.0",
-    "description": "TRON",
+    "description": "TRON API",
     "license" : "MIT",
     "autoload": {
         "psr-4": {
@@ -19,8 +18,7 @@
         "illuminate/support": "^6.0",
         "ionux/phactor": "^1.0",
         "ext-curl": "*",
-        "iexbase/tron-api": "dev-master",
-        "blackpanda/encryptor": "~1"
+        "iexbase/tron-api": "dev-master"
     },
     "minimum-stability": "dev"
 }

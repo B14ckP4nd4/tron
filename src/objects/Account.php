@@ -29,13 +29,11 @@
          * @param $updated_at
          * @throws \IEXBase\TronAPI\Exception\TronException
          */
-        public function __construct(string $address,string $hexAddress = null,string $privateKey = null,$created_at, $updated_at)
+        public function __construct(Address $address)
         {
-            $this->address = $address;
-            $this->hexAddress = $hexAddress ?? $this->getAccountHex();
-            $this->privateKey = $privateKey;
-            $this->created_at = $created_at;
-            $this->updated_at = $updated_at;
+            $this->address = $address->address;
+            $this->hexAddress = $address->hexAddress ?? $this->getAccountHex();
+            $this->privateKey = $address->privateKey;
             $this->dispatchAccount();
             $this->tron = new Tron($this->address);
 
@@ -43,11 +41,7 @@
 
         public function saveAccount()
         {
-            $this->account->address = $this->address;
-            $this->account->hexAddress = $this->hexAddress;
-            $this->account->privateKey = $this->privateKey;
-            $this->account->active = $this->active;
-            $this->account->last_use = $this->last_use;
+            return $this->account->save();
 
         }
 
@@ -61,15 +55,22 @@
                 'address' => $this->address,
             ]);
 
-            if($this->account->id) {
-                $this->address = $this->account->address;
-                $this->hexAddress = $this->account->hexAddress;
-                $this->active = $this->account->active;
-                $this->last_use = $this->account->last_use;
+            if(!$this->account->id) {
+                $this->account->address = $this->address;
+                $this->account->hexAddress = $this->hexAddress;
+                $this->account->privateKey = $this->privateKey;
+                $this->account->active = $this->active;
+                $this->account->last_use = null;
             }
+
+            $this->address = $this->account->address ?? $this->address;
+            $this->hexAddress = $this->account->hexAddress ?? $this->hexAddress;
+            $this->active = $this->account->active ?? $this->active;
+            $this->last_use = $this->account->last_use ?? null;
         }
 
         private function getAccountHex(){
+            if($this->hexAddress) return $this->hexAddress;
             return $this->tron->getHexAddress();
         }
 

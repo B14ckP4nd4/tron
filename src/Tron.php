@@ -4,6 +4,8 @@
     namespace blackpanda\tron;
 
 
+    use blackpanda\encryptor\SSLEncryption;
+    use blackpanda\tron\objects\Address;
     use blackpanda\tron\objects\TronScan;
     use blackpanda\tron\objects\walletGenerator;
     use IEXBase\TronAPI\Provider\HttpProvider;
@@ -19,6 +21,8 @@
         private $tronScan;
         private $api;
         private $walletGenerator;
+
+        private $SSLEncryptor;
 
         /**
          * Tron constructor.
@@ -45,6 +49,9 @@
 
             $this->walletGenerator = new walletGenerator();
 
+
+            $this->SSLEncryptor = new SSLEncryption();
+
             return $this;
 
         }
@@ -69,19 +76,17 @@
             return true;
         }
 
-        public function generateEncryptedWallet()
+        public function generateEncryptedWallet() : Address
         {
             $wallet = $this->walletGenerator->generateWallet();
 
             if($wallet)
             {
-                $encrypt = SSLEncryption::publicEncrypt($wallet->privateKey);
+                $encrypt = $this->SSLEncryptor->publicEncrypt($wallet->privateKey);
                 $wallet->privateKey = $encrypt;
-
-                return $wallet;
             }
 
-            return false;
+            return $wallet;
         }
 
 

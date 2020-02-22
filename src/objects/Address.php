@@ -25,11 +25,11 @@
          * @param $hexAddress
          * @param $privateKey
          */
-        public function __construct(string $address, string $hexAddress, string $privateKey)
+        public function __construct(string $address, string $privateKey = null, string $hexAddress = null)
         {
             $this->address = $address;
             $this->hexAddress = $hexAddress;
-            $this->privateKey = $privateKey;
+            $this->privateKey = ltrim($privateKey,'0x');
 
             return $this;
         }
