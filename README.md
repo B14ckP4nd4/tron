@@ -1,11 +1,11 @@
-###Tron API Wrapper
+### Tron API Wrapper
 > **Important Note** This one has a little privates and I have to encrypt them.
 
-####Regiments
+#### Regiments
 - PHP ^7.2
 - Laravel ^6
 
-####installation
+#### installation
 
 **use Composer**
 ```
